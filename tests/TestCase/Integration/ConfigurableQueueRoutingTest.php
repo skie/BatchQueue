@@ -59,6 +59,12 @@ class ConfigurableQueueRoutingTest extends TestCase
     {
         $this->clearAllQueues();
         Configure::delete('BatchQueue.queues');
+
+        $locator = TableRegistry::getTableLocator();
+        if ($locator->exists('Cake/Enqueue.Enqueue')) {
+            $locator->remove('Cake/Enqueue.Enqueue');
+        }
+
         parent::tearDown();
     }
 
@@ -263,7 +269,13 @@ class ConfigurableQueueRoutingTest extends TestCase
     private function countMessages(string $queueName): int
     {
         $queueName = 'enqueue.app.' . $queueName;
-        $enqueueTable = TableRegistry::getTableLocator()->get('Cake/Enqueue.Enqueue');
+        $locator = TableRegistry::getTableLocator();
+
+        if (!$locator->exists('Cake/Enqueue.Enqueue')) {
+            return 0;
+        }
+
+        $enqueueTable = $locator->get('Cake/Enqueue.Enqueue');
 
         return $enqueueTable->find()
             ->where(['queue' => $queueName])
@@ -338,7 +350,13 @@ class ConfigurableQueueRoutingTest extends TestCase
 
     private function clearQueue(string $queueName): void
     {
-        $enqueueTable = TableRegistry::getTableLocator()->get('Cake/Enqueue.Enqueue');
+        $locator = TableRegistry::getTableLocator();
+
+        if (!$locator->exists('Cake/Enqueue.Enqueue')) {
+            return;
+        }
+
+        $enqueueTable = $locator->get('Cake/Enqueue.Enqueue');
         $enqueueTable->deleteAll(['queue LIKE' => '%' . $queueName . '%']);
     }
 }
