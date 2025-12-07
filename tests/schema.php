@@ -64,7 +64,7 @@ return [
     'enqueue' => [
         'columns' => [
             'id' => ['type' => 'uuid', 'null' => false],
-            'published_at' => ['type' => 'integer', 'null' => true, 'default' => null],
+            'published_at' => ['type' => 'biginteger', 'null' => true, 'default' => null],
             'body' => ['type' => 'text', 'null' => true, 'default' => null],
             'headers' => ['type' => 'text', 'null' => true, 'default' => null],
             'properties' => ['type' => 'text', 'null' => true, 'default' => null],
