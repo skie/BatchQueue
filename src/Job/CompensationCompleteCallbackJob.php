@@ -1,0 +1,71 @@
+<?php
+declare(strict_types=1);
+
+namespace BatchQueue\Job;
+
+use BatchQueue\ResultAwareInterface;
+use BatchQueue\Storage\SqlBatchStorage;
+use Cake\Log\Log;
+use Cake\Queue\Job\JobInterface;
+use Cake\Queue\Job\Message;
+use Cake\Queue\Queue\Processor;
+
+/**
+ * Compensation Complete Callback Job
+ *
+ * Called when a compensation chain completes successfully.
+ * Updates the original batch context with completion status.
+ */
+class CompensationCompleteCallbackJob implements JobInterface, ResultAwareInterface
+{
+    /**
+     * The result of the job execution
+     *
+     * @var mixed
+     */
+    private mixed $result = null;
+
+    /**
+     * Execute compensation completion callback
+     *
+     * @param \Cake\Queue\Job\Message $message Job message
+     * @return string|null Job result
+     */
+    public function execute(Message $message): ?string
+    {
+        Log::info('**CompensationCompleteCallbackJob** execute: message=' . json_encode($message));
+
+        $args = $message->getArgument();
+        $originalBatchId = $args['original_batch_id'] ?? null;
+
+        if (!$originalBatchId) {
+            return null;
+        }
+
+        $storage = new SqlBatchStorage();
+        $batch = $storage->getBatch($originalBatchId);
+
+        if ($batch) {
+            $context = $batch->context ?? [];
+            $context['compensation_status'] = 'completed';
+            $context['compensation_completed_at'] = date('Y-m-d H:i:s');
+
+            $storage->updateBatch($originalBatchId, ['context' => $context]);
+        }
+        Log::info('**CompensationCompleteCallbackJob** execute: originalBatchId=' . $originalBatchId . ' batch=' . json_encode($batch));
+
+        $this->result = ['compensation_complete' => true];
+
+        return Processor::ACK;
+    }
+
+    /**
+     * Get the result of the job execution
+     *
+     * @return mixed
+     */
+    public function getResult(): mixed
+    {
+        return $this->result;
+    }
+}
