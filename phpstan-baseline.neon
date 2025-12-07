@@ -4,12 +4,6 @@ parameters:
 			message: '#^Call to function in_array\(\) with arguments ''Monitor\\\\Job…'', array\<string, class\-string\> and true will always evaluate to false\.$#'
 			identifier: function.impossibleType
 			count: 1
-			path: src/Processor/BaseBatchProcessor.php
-
-		-
-			message: '#^Call to function in_array\(\) with arguments ''Monitor\\\\Job…'', array\<string, class\-string\> and true will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
 			path: src/Processor/BatchJobProcessor.php
 
 		-
