@@ -5,13 +5,9 @@ namespace BatchQueue\Test\TestCase\Integration;
 
 use BatchQueue\Service\BatchManager;
 use BatchQueue\Storage\SqlBatchStorage;
+use BatchQueue\Test\Support\BaseIntegrationTestCase;
 use BatchQueue\Test\Support\TestJobs\AccumulateResultsCallbackJob;
 use BatchQueue\Test\Support\TestJobs\AccumulatorTestJob;
-use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
-use Cake\Queue\QueueManager;
-use Cake\TestSuite\TestCase;
 use Exception;
 
 /**
@@ -20,46 +16,12 @@ use Exception;
  * Tests that job-specific args are correctly passed to jobs and can be used
  * for map-reduce style accumulation patterns
  */
-class ArgsPassingTest extends TestCase
+class ArgsPassingTest extends BaseIntegrationTestCase
 {
-    use ConsoleIntegrationTestTrait;
-
-    protected array $fixtures = ['plugin.BatchQueue.Batches', 'plugin.BatchQueue.BatchJobs'];
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setAppNamespace();
-        $this->clearAllQueues();
-
-        if (!class_exists('TestApp\Application')) {
-            require_once dirname(dirname(__DIR__)) . DS . 'TestApp' . DS . 'Application.php';
-        }
-
-        $this->configApplication(
-            'TestApp\Application',
-            [CONFIG],
-        );
-
-        $this->registerQueueConfigs();
-        $this->clearAllQueues();
         AccumulatorTestJob::reset();
-    }
-
-    protected function registerQueueConfigs(): void
-    {
-        foreach (Configure::read('Queue') as $key => $data) {
-            if (QueueManager::getConfig($key) === null) {
-                QueueManager::setConfig($key, $data);
-            }
-        }
-    }
-
-    protected function tearDown(): void
-    {
-        $this->clearQueue('batchjob');
-        $this->clearQueue('chainedjobs');
-        parent::tearDown();
     }
 
     /**
@@ -300,36 +262,5 @@ class ArgsPassingTest extends TestCase
         $this->assertContains(100, $values, 'First job should have value 100');
         $this->assertContains(0, $values, 'Second job should have default value 0 (no args)');
         $this->assertContains(200, $values, 'Third job should have value 200');
-    }
-
-    private function countMessages(string $queueName): int
-    {
-        $queueName = 'enqueue.app.' . $queueName;
-        $enqueueTable = TableRegistry::getTableLocator()->get('Cake/Enqueue.Enqueue');
-
-        return $enqueueTable->find()
-            ->where(['queue' => $queueName])
-            ->count();
-    }
-
-    private function refreshQM(): void
-    {
-        QueueManager::drop('default');
-        QueueManager::drop('batch');
-        QueueManager::drop('batchjob');
-        QueueManager::drop('chainedjobs');
-    }
-
-    private function clearAllQueues(): void
-    {
-        $this->clearQueue('default');
-        $this->clearQueue('batchjob');
-        $this->clearQueue('chainedjobs');
-    }
-
-    private function clearQueue(string $queueName): void
-    {
-        $enqueueTable = TableRegistry::getTableLocator()->get('Cake/Enqueue.Enqueue');
-        $enqueueTable->deleteAll(['queue LIKE' => '%' . $queueName . '%']);
     }
 }

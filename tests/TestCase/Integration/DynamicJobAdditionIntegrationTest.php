@@ -5,6 +5,7 @@ namespace BatchQueue\Test\TestCase\Integration;
 
 use BatchQueue\Service\BatchManager;
 use BatchQueue\Storage\SqlBatchStorage;
+use BatchQueue\Test\Support\BaseIntegrationTestCase;
 use BatchQueue\Test\Support\TestJobs\ContextReceiverJob;
 use BatchQueue\Test\Support\TestJobs\ContextUpdaterAddsJob;
 use BatchQueue\Test\Support\TestJobs\DynamicJobAdderJob;
@@ -15,11 +16,6 @@ use BatchQueue\Test\Support\TestJobs\Job2;
 use BatchQueue\Test\Support\TestJobs\Job2AddsJob4;
 use BatchQueue\Test\Support\TestJobs\Job3;
 use BatchQueue\Test\Support\TestJobs\Job4;
-use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
-use Cake\Queue\QueueManager;
-use Cake\TestSuite\TestCase;
 
 /**
  * Dynamic Job Addition Integration Test
@@ -32,12 +28,8 @@ use Cake\TestSuite\TestCase;
  * - Verify all 4 jobs execute in correct order
  * - Verify batch completes only after all jobs (including dynamically added ones)
  */
-class DynamicJobAdditionIntegrationTest extends TestCase
+class DynamicJobAdditionIntegrationTest extends BaseIntegrationTestCase
 {
-    use ConsoleIntegrationTestTrait;
-
-    protected array $fixtures = ['plugin.BatchQueue.Batches', 'plugin.BatchQueue.BatchJobs'];
-
     /**
      * Setup
      *
@@ -46,19 +38,6 @@ class DynamicJobAdditionIntegrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setAppNamespace();
-
-        if (!class_exists('TestApp\Application')) {
-            require_once dirname(dirname(__DIR__)) . DS . 'TestApp' . DS . 'Application.php';
-        }
-
-        $this->configApplication(
-            'TestApp\Application',
-            [CONFIG],
-        );
-
-        $this->registerQueueConfigs();
-        $this->clearAllQueues();
 
         ContextReceiverJob::reset();
         ContextUpdaterAddsJob::reset();
@@ -70,31 +49,6 @@ class DynamicJobAdditionIntegrationTest extends TestCase
         Job2AddsJob4::reset();
         Job3::reset();
         Job4::reset();
-    }
-
-    /**
-     * Register queue configurations
-     *
-     * @return void
-     */
-    protected function registerQueueConfigs(): void
-    {
-        foreach (Configure::read('Queue') as $key => $data) {
-            if (QueueManager::getConfig($key) === null) {
-                QueueManager::setConfig($key, $data);
-            }
-        }
-    }
-
-    /**
-     * Teardown
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-        $this->clearAllQueues();
-        parent::tearDown();
     }
 
     /**
@@ -161,43 +115,6 @@ class DynamicJobAdditionIntegrationTest extends TestCase
         $this->assertEquals('Job2', $executionLog[1]['job'], 'Second job should be Job2');
         $this->assertEquals('Job3', $executionLog[2]['job'], 'Third job should be Job3');
         $this->assertEquals('Job4', $executionLog[3]['job'], 'Fourth job should be Job4');
-    }
-
-    /**
-     * Refresh QueueManager
-     *
-     * @return void
-     */
-    private function refreshQM(): void
-    {
-        QueueManager::drop('default');
-        QueueManager::drop('batch');
-        QueueManager::drop('batchjob');
-        QueueManager::drop('chainedjobs');
-    }
-
-    /**
-     * Clear all queues
-     *
-     * @return void
-     */
-    protected function clearAllQueues(): void
-    {
-        $this->clearQueue('default');
-        $this->clearQueue('batchjob');
-        $this->clearQueue('chainedjobs');
-    }
-
-    /**
-     * Clear a specific queue
-     *
-     * @param string $queueName Queue name
-     * @return void
-     */
-    private function clearQueue(string $queueName): void
-    {
-        $enqueueTable = TableRegistry::getTableLocator()->get('Cake/Enqueue.Enqueue');
-        $enqueueTable->deleteAll(['queue LIKE' => '%' . $queueName . '%']);
     }
 
     /**

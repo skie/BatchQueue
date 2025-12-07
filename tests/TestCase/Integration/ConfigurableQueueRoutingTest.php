@@ -7,12 +7,9 @@ use BatchQueue\Processor\BatchJobProcessor;
 use BatchQueue\Processor\ChainedJobProcessor;
 use BatchQueue\Service\BatchManager;
 use BatchQueue\Storage\SqlBatchStorage;
+use BatchQueue\Test\Support\BaseIntegrationTestCase;
 use BatchQueue\Test\Support\TestJobs\AccumulatorTestJob;
-use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
-use Cake\Queue\QueueManager;
-use Cake\TestSuite\TestCase;
 
 /**
  * Test configurable queue routing in BatchQueue
@@ -20,51 +17,17 @@ use Cake\TestSuite\TestCase;
  * Tests that queue configs can be customized per batch/chain
  * and that different chains can use different queues
  */
-class ConfigurableQueueRoutingTest extends TestCase
+class ConfigurableQueueRoutingTest extends BaseIntegrationTestCase
 {
-    use ConsoleIntegrationTestTrait;
-
-    protected array $fixtures = ['plugin.BatchQueue.Batches', 'plugin.BatchQueue.BatchJobs'];
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setAppNamespace();
-        $this->clearAllQueues();
-
-        if (!class_exists('TestApp\Application')) {
-            require_once dirname(dirname(__DIR__)) . DS . 'TestApp' . DS . 'Application.php';
-        }
-
-        $this->configApplication(
-            'TestApp\Application',
-            [CONFIG],
-        );
-
-        $this->registerQueueConfigs();
-        $this->clearAllQueues();
         AccumulatorTestJob::reset();
-    }
-
-    protected function registerQueueConfigs(): void
-    {
-        foreach (Configure::read('Queue') as $key => $data) {
-            if (QueueManager::getConfig($key) === null) {
-                QueueManager::setConfig($key, $data);
-            }
-        }
     }
 
     protected function tearDown(): void
     {
-        $this->clearAllQueues();
         Configure::delete('BatchQueue.queues');
-
-        $locator = TableRegistry::getTableLocator();
-        if ($locator->exists('Cake/Enqueue.Enqueue')) {
-            $locator->remove('Cake/Enqueue.Enqueue');
-        }
-
         parent::tearDown();
     }
 
@@ -266,47 +229,6 @@ class ConfigurableQueueRoutingTest extends TestCase
         }
     }
 
-    private function countMessages(string $queueName): int
-    {
-        $queueName = 'enqueue.app.' . $queueName;
-        $locator = TableRegistry::getTableLocator();
-
-        if (!$locator->exists('Cake/Enqueue.Enqueue')) {
-            return 0;
-        }
-
-        $enqueueTable = $locator->get('Cake/Enqueue.Enqueue');
-
-        return $enqueueTable->find()
-            ->where(['queue' => $queueName])
-            ->count();
-    }
-
-    private function refreshQM(): void
-    {
-        QueueManager::drop('default');
-        QueueManager::drop('batchjob');
-        QueueManager::drop('chainedjobs');
-        QueueManager::drop('email-chain');
-        QueueManager::drop('payment-chain');
-        QueueManager::drop('custom-batch');
-        QueueManager::drop('custom-batch-config');
-        QueueManager::drop('custom-parallel');
-
-        $this->registerQueueConfigs();
-    }
-
-    private function clearAllQueues(): void
-    {
-        $this->clearQueue('default');
-        $this->clearQueue('batchjob');
-        $this->clearQueue('chainedjobs');
-        $this->clearQueue('email-chain');
-        $this->clearQueue('payment-chain');
-        $this->clearQueue('custom-batch');
-        $this->clearQueue('custom-batch-config');
-    }
-
     /**
      * Test simple batch with custom queue that actually executes
      *
@@ -346,17 +268,5 @@ class ConfigurableQueueRoutingTest extends TestCase
         $this->assertCount(2, $executedJobs, 'Both jobs should have executed');
         $this->assertEquals(10, $executedJobs[0]['all_args']['value'] ?? null, 'First job should have value 10');
         $this->assertEquals(20, $executedJobs[1]['all_args']['value'] ?? null, 'Second job should have value 20');
-    }
-
-    private function clearQueue(string $queueName): void
-    {
-        $locator = TableRegistry::getTableLocator();
-
-        if (!$locator->exists('Cake/Enqueue.Enqueue')) {
-            return;
-        }
-
-        $enqueueTable = $locator->get('Cake/Enqueue.Enqueue');
-        $enqueueTable->deleteAll(['queue LIKE' => '%' . $queueName . '%']);
     }
 }
