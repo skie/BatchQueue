@@ -16,12 +16,12 @@
     },
     "autoload": {
         "psr-4": {
-            "BatchQueue\\": "src/"
+            "Crustum\\BatchQueue\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BatchQueue\\Test\\": "tests/"
+            "Crustum\\BatchQueue\\Test\\": "tests/"
         }
     },
     "scripts": {

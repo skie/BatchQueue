@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Service;
+namespace Crustum\BatchQueue\Service;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Data\Job\JobDefinitionFactory;
-use BatchQueue\Storage\BatchStorageInterface;
 use Cake\Queue\QueueManager;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Data\Job\JobDefinitionFactory;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -35,7 +35,7 @@ class BatchManager
      * Old: new BatchManager($storage, 'batch')
      * New: new BatchManager($storage, null, 'batch')
      *
-     * @param \BatchQueue\Storage\BatchStorageInterface $storage Storage interface
+     * @param \Crustum\BatchQueue\Storage\BatchStorageInterface $storage Storage interface
      * @param string|null $queueNameOrConfig Queue name (new) or queue config (old signature)
      * @param string|null $queueConfig Queue config name (new signature only)
      */
@@ -60,7 +60,7 @@ class BatchManager
      * - With compensation: [['SendEmailJob::class', 'CancelEmailJob::class'], 'ProcessOrderJob::class']
      *
      * @param array $jobs Array of job definitions
-     * @return \BatchQueue\Service\BatchBuilder
+     * @return \Crustum\BatchQueue\Service\BatchBuilder
      */
     public function batch(array $jobs): BatchBuilder
     {
@@ -75,7 +75,7 @@ class BatchManager
      * - With compensation: [['Step1Job::class', 'UndoStep1Job::class'], ['Step2Job::class', 'UndoStep2Job::class']]
      *
      * @param array $jobs Array of job definitions in execution order
-     * @return \BatchQueue\Service\BatchBuilder
+     * @return \Crustum\BatchQueue\Service\BatchBuilder
      */
     public function chain(array $jobs): BatchBuilder
     {
@@ -86,7 +86,7 @@ class BatchManager
      * Get batch status and details
      *
      * @param string $batchId Batch identifier
-     * @return \BatchQueue\Data\BatchDefinition|null
+     * @return \Crustum\BatchQueue\Data\BatchDefinition|null
      */
     public function getBatch(string $batchId): ?BatchDefinition
     {
@@ -98,7 +98,7 @@ class BatchManager
      *
      * @param string $batchId Batch identifier
      * @param array $jobs Job definitions (same format as batch())
-     * @return \BatchQueue\Data\BatchDefinition Fresh batch instance
+     * @return \Crustum\BatchQueue\Data\BatchDefinition Fresh batch instance
      * @throws \RuntimeException If batch not found or addition fails
      */
     public function addJobs(string $batchId, array $jobs): BatchDefinition
@@ -130,7 +130,7 @@ class BatchManager
     /**
      * Normalize job definitions for adding to existing batch
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Existing batch
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Existing batch
      * @param array $jobs Job definitions to normalize
      * @return array Normalized job definitions
      */
@@ -227,7 +227,7 @@ class BatchManager
     /**
      * Internal method to trigger compensation jobs
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition
      * @return bool True if compensation jobs were queued
      */
     private function triggerCompensation(BatchDefinition $batch): bool
@@ -272,7 +272,7 @@ class BatchManager
      *   - 'created_before' => \DateTime|null
      *   - 'limit' => int
      *   - 'offset' => int
-     * @return array<\BatchQueue\Data\BatchDefinition> List of batches
+     * @return array<\Crustum\BatchQueue\Data\BatchDefinition> List of batches
      */
     public function getBatches(array $filters = []): array
     {

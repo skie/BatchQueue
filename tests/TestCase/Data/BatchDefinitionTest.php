@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\TestCase\Data;
+namespace Crustum\BatchQueue\Test\TestCase\Data;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Test\Support\Step1Job;
-use BatchQueue\Test\Support\Step2Job;
-use BatchQueue\Test\Support\Step3Job;
-use BatchQueue\Test\Support\TestJob;
 use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Test\Support\Step1Job;
+use Crustum\BatchQueue\Test\Support\Step2Job;
+use Crustum\BatchQueue\Test\Support\Step3Job;
+use Crustum\BatchQueue\Test\Support\TestJob;
 
 /**
  * BatchDefinition Test Case
@@ -153,7 +153,7 @@ class BatchDefinitionTest extends TestCase
         $this->assertEquals(BatchDefinition::TYPE_PARALLEL, $array['type']);
         // Verify jobs structure (format changed after refactoring)
         $this->assertCount(1, $array['jobs']);
-        $this->assertEquals('BatchQueue\Test\Support\TestJob', $array['jobs'][0]['class']);
+        $this->assertEquals('Crustum\BatchQueue\Test\Support\TestJob', $array['jobs'][0]['class']);
         $this->assertEquals(['test' => 'data'], $array['context']);
         $this->assertEquals(['timeout' => 3600], $array['options']);
         $this->assertEquals('2024-01-01 12:00:00', $array['created']);

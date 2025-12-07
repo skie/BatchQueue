@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\Support\TestJobs;
+namespace Crustum\BatchQueue\Test\Support\TestJobs;
 
-use BatchQueue\ContextAwareInterface;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
+use Crustum\BatchQueue\ContextAwareInterface;
 use Interop\Queue\Processor;
 
 /**

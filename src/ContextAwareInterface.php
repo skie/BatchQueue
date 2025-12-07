@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue;
+namespace Crustum\BatchQueue;
 
 use Cake\Queue\Job\JobInterface;
 

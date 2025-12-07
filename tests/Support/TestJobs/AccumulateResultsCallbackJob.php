@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\Support\TestJobs;
+namespace Crustum\BatchQueue\Test\Support\TestJobs;
 
-use BatchQueue\ResultAwareInterface;
-use BatchQueue\Storage\SqlBatchStorage;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
 use Cake\Queue\Queue\Processor;
+use Crustum\BatchQueue\ResultAwareInterface;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
 
 /**
  * Accumulate Results Callback Job

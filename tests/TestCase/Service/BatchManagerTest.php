@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\TestCase\Service;
+namespace Crustum\BatchQueue\Test\TestCase\Service;
 
-use BatchQueue\Service\BatchBuilder;
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Storage\BatchStorageInterface;
 use Cake\TestSuite\TestCase;
+use Crustum\BatchQueue\Service\BatchBuilder;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**

@@ -1,23 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Processor;
+namespace Crustum\BatchQueue\Processor;
 
-use BatchQueue\ContextAwareInterface;
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Data\BatchJobDefinition;
-use BatchQueue\Job\CompensationCompleteCallbackJob;
-use BatchQueue\Job\CompensationFailedCallbackJob;
-use BatchQueue\ResultAwareInterface;
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Service\QueueConfigService;
-use BatchQueue\Storage\BatchStorageInterface;
 use Cake\Core\ContainerInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
 use Cake\Queue\Queue\Processor;
 use Cake\Queue\QueueManager;
+use Crustum\BatchQueue\ContextAwareInterface;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Data\BatchJobDefinition;
+use Crustum\BatchQueue\Job\CompensationCompleteCallbackJob;
+use Crustum\BatchQueue\Job\CompensationFailedCallbackJob;
+use Crustum\BatchQueue\ResultAwareInterface;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Service\QueueConfigService;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use DateTime;
 use Interop\Queue\Context;
 use Interop\Queue\Message as QueueMessage;
@@ -43,7 +43,7 @@ class ChainedJobProcessor extends Processor
     /**
      * Batch storage
      *
-     * @var \BatchQueue\Storage\BatchStorageInterface
+     * @var \Crustum\BatchQueue\Storage\BatchStorageInterface
      */
     private BatchStorageInterface $storage;
 
@@ -419,7 +419,7 @@ class ChainedJobProcessor extends Processor
     /**
      * Queue next job in sequential chain
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition
      * @param string $completedJobId Completed job ID (message_id)
      * @param mixed $result Job result
      * @return void
@@ -508,7 +508,7 @@ class ChainedJobProcessor extends Processor
     /**
      * Build compensation chain from completed jobs
      *
-     * @param \BatchQueue\Data\BatchDefinition $originalBatch Original batch
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $originalBatch Original batch
      * @param array $completedJobs Completed jobs in reverse order
      * @return array Compensation chain definition
      */
@@ -542,7 +542,7 @@ class ChainedJobProcessor extends Processor
     /**
      * Trigger compensation for all completed jobs in batch
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition
      * @return void
      */
     protected function triggerBatchCompensation(BatchDefinition $batch): void

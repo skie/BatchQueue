@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Service;
+namespace Crustum\BatchQueue\Service;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Storage\BatchStorageInterface;
 use Cake\Utility\Text;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use InvalidArgumentException;
 
 /**
@@ -31,7 +31,7 @@ final class BatchBuilder
     /**
      * Constructor
      *
-     * @param \BatchQueue\Storage\BatchStorageInterface $storage Batch storage
+     * @param \Crustum\BatchQueue\Storage\BatchStorageInterface $storage Batch storage
      * @param string|null $queueName Queue name (optional, for named queue resolution)
      * @param string|null $queueConfig Queue configuration name (optional, will be resolved if null)
      * @param string $type Batch type

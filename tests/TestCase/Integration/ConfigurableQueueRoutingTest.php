@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\TestCase\Integration;
+namespace Crustum\BatchQueue\Test\TestCase\Integration;
 
-use BatchQueue\Processor\BatchJobProcessor;
-use BatchQueue\Processor\ChainedJobProcessor;
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Storage\SqlBatchStorage;
-use BatchQueue\Test\Support\BaseIntegrationTestCase;
-use BatchQueue\Test\Support\TestJobs\AccumulatorTestJob;
 use Cake\Core\Configure;
+use Crustum\BatchQueue\Processor\BatchJobProcessor;
+use Crustum\BatchQueue\Processor\ChainedJobProcessor;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
+use Crustum\BatchQueue\Test\Support\BaseIntegrationTestCase;
+use Crustum\BatchQueue\Test\Support\TestJobs\AccumulatorTestJob;
 
 /**
  * Test configurable queue routing in BatchQueue

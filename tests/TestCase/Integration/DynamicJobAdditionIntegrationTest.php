@@ -1,21 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\TestCase\Integration;
+namespace Crustum\BatchQueue\Test\TestCase\Integration;
 
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Storage\SqlBatchStorage;
-use BatchQueue\Test\Support\BaseIntegrationTestCase;
-use BatchQueue\Test\Support\TestJobs\ContextReceiverJob;
-use BatchQueue\Test\Support\TestJobs\ContextUpdaterAddsJob;
-use BatchQueue\Test\Support\TestJobs\DynamicJobAdderJob;
-use BatchQueue\Test\Support\TestJobs\Job1;
-use BatchQueue\Test\Support\TestJobs\Job1AddsJob2And3;
-use BatchQueue\Test\Support\TestJobs\Job1AddsJob3;
-use BatchQueue\Test\Support\TestJobs\Job2;
-use BatchQueue\Test\Support\TestJobs\Job2AddsJob4;
-use BatchQueue\Test\Support\TestJobs\Job3;
-use BatchQueue\Test\Support\TestJobs\Job4;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
+use Crustum\BatchQueue\Test\Support\BaseIntegrationTestCase;
+use Crustum\BatchQueue\Test\Support\TestJobs\ContextReceiverJob;
+use Crustum\BatchQueue\Test\Support\TestJobs\ContextUpdaterAddsJob;
+use Crustum\BatchQueue\Test\Support\TestJobs\DynamicJobAdderJob;
+use Crustum\BatchQueue\Test\Support\TestJobs\Job1;
+use Crustum\BatchQueue\Test\Support\TestJobs\Job1AddsJob2And3;
+use Crustum\BatchQueue\Test\Support\TestJobs\Job1AddsJob3;
+use Crustum\BatchQueue\Test\Support\TestJobs\Job2;
+use Crustum\BatchQueue\Test\Support\TestJobs\Job2AddsJob4;
+use Crustum\BatchQueue\Test\Support\TestJobs\Job3;
+use Crustum\BatchQueue\Test\Support\TestJobs\Job4;
 
 /**
  * Dynamic Job Addition Integration Test

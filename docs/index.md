@@ -33,7 +33,7 @@ Key features include job-specific arguments for parallel batches, automatic cont
 Install the plugin via Composer:
 
 ```bash
-composer require .../batch_queue
+composer require crustum/batch_queue
 ```
 
 Load the plugin in your `Application.php`:
@@ -43,14 +43,14 @@ public function bootstrap(): void
 {
     parent::bootstrap();
 
-    $this->addPlugin('BatchQueue', ['bootstrap' => true, 'routes' => false]);
+    $this->addPlugin('Crustum/BatchQueue', ['bootstrap' => true, 'routes' => false]);
 }
 ```
 
 Run the database migrations:
 
 ```bash
-bin/cake migrations migrate -p BatchQueue
+bin/cake migrations migrate -p Crustum/BatchQueue
 ```
 
 The migrations create two tables:
@@ -88,12 +88,12 @@ Add the following queue configurations to your `config/app.php`:
     'batchjob' => [
         'url' => 'cakephp://default?table_name=enqueue',
         'queue' => 'batchjob',
-        'processor' => \BatchQueue\Processor\BatchJobProcessor::class,
+        'processor' => \Crustum\BatchQueue\Processor\BatchJobProcessor::class,
     ],
     'chainedjobs' => [
         'url' => 'cakephp://default?table_name=enqueue',
         'queue' => 'chainedjobs',
-        'processor' => \BatchQueue\Processor\ChainedJobProcessor::class,
+        'processor' => \Crustum\BatchQueue\Processor\ChainedJobProcessor::class,
     ],
 ],
 ```
@@ -117,7 +117,7 @@ Sequential chains typically need fewer workers since jobs execute one at a time,
 The simplest way to use BatchQueue is through the `BatchManager` service. Get an instance from the container:
 
 ```php
-use BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Service\BatchManager;
 
 $batchManager = \Cake\Core\FactoryLocator::get('Service', 'BatchManager');
 ```
@@ -298,10 +298,10 @@ The chain executes in order:
 In sequential chains, context accumulates automatically. Each job can add data to the context, and subsequent jobs receive the updated context:
 
 ```php
-use BatchQueue\ContextAwareInterface;
-use BatchQueue\ResultAwareInterface;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
+use Crustum\BatchQueue\ContextAwareInterface;
+use Crustum\BatchQueue\ResultAwareInterface;
 use Interop\Queue\Processor;
 
 class ValidateOrderJob implements JobInterface, ContextAwareInterface, ResultAwareInterface
@@ -409,10 +409,10 @@ Dynamic job addition is useful for adaptive workflows where next steps depend on
 Jobs can add additional steps to sequential chains during execution:
 
 ```php
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Storage\SqlBatchStorage;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
 use Interop\Queue\Processor;
 
 class DiscoverTasksJob implements JobInterface
@@ -452,10 +452,10 @@ $batchId = $batchManager->batch([
 When `ScanDirectoryJob` discovers files, it can add processing jobs for each file:
 
 ```php
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Storage\SqlBatchStorage;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
 use Interop\Queue\Processor;
 
 class ScanDirectoryJob implements JobInterface
@@ -611,9 +611,9 @@ Context is the primary mechanism for sequential chains to pass and accumulate da
 Jobs implement the `ContextAwareInterface` to receive and update batch context. The interface requires two methods for managing context data:
 
 ```php
-use BatchQueue\ContextAwareInterface;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
+use Crustum\BatchQueue\ContextAwareInterface;
 
 class ProcessOrderJob implements JobInterface, ContextAwareInterface
 {
@@ -784,22 +784,22 @@ Define custom queue configurations in `config/app.php`:
     'batchjob' => [
         'url' => 'cakephp://default?table_name=enqueue',
         'queue' => 'batchjob',
-        'processor' => \BatchQueue\Processor\BatchJobProcessor::class,
+        'processor' => \Crustum\BatchQueue\Processor\BatchJobProcessor::class,
     ],
     'chainedjobs' => [
         'url' => 'cakephp://default?table_name=enqueue',
         'queue' => 'chainedjobs',
-        'processor' => \BatchQueue\Processor\ChainedJobProcessor::class,
+        'processor' => \Crustum\BatchQueue\Processor\ChainedJobProcessor::class,
     ],
     'email-chain' => [
         'url' => 'cakephp://default?table_name=enqueue',
         'queue' => 'email-chain',
-        'processor' => \BatchQueue\Processor\ChainedJobProcessor::class,
+        'processor' => \Crustum\BatchQueue\Processor\ChainedJobProcessor::class,
     ],
     'payment-chain' => [
         'url' => 'cakephp://default?table_name=enqueue',
         'queue' => 'payment-chain',
-        'processor' => \BatchQueue\Processor\ChainedJobProcessor::class,
+        'processor' => \Crustum\BatchQueue\Processor\ChainedJobProcessor::class,
     ],
 ],
 ```
@@ -979,7 +979,7 @@ Jobs can return results that are collected and stored with the batch for later r
 Implement `ResultAwareInterface` to return structured results:
 
 ```php
-use BatchQueue\ResultAwareInterface;
+use Crustum\BatchQueue\ResultAwareInterface;
 
 class ProcessOrderJob implements JobInterface, ResultAwareInterface
 {

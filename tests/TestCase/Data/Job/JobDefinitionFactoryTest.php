@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\TestCase\Data\Job;
+namespace Crustum\BatchQueue\Test\TestCase\Data\Job;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Data\Job\CompensatedJobDefinition;
-use BatchQueue\Data\Job\JobDefinition;
-use BatchQueue\Data\Job\JobDefinitionFactory;
-use BatchQueue\Model\Entity\BatchJob;
 use Cake\TestSuite\TestCase;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Data\Job\CompensatedJobDefinition;
+use Crustum\BatchQueue\Data\Job\JobDefinition;
+use Crustum\BatchQueue\Data\Job\JobDefinitionFactory;
+use Crustum\BatchQueue\Model\Entity\BatchJob;
 use Exception;
 use InvalidArgumentException;
 use stdClass;

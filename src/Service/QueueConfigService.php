@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Service;
+namespace Crustum\BatchQueue\Service;
 
-use BatchQueue\Processor\BatchJobProcessor;
-use BatchQueue\Processor\ChainedJobProcessor;
 use Cake\Core\Configure;
+use Crustum\BatchQueue\Processor\BatchJobProcessor;
+use Crustum\BatchQueue\Processor\ChainedJobProcessor;
 
 /**
  * Queue Configuration Service

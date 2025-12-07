@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Model\Entity;
+namespace Crustum\BatchQueue\Model\Entity;
 
 use Cake\ORM\Entity;
 
@@ -20,7 +20,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\DateTime|null $modified
  * @property \Cake\I18n\DateTime|null $completed_at
  *
- * @property \BatchQueue\Model\Entity\BatchJob[] $batch_jobs
+ * @property \Crustum\BatchQueue\Model\Entity\BatchJob[] $batch_jobs
  */
 class Batch extends Entity
 {

@@ -1,33 +1,33 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Model\Table;
+namespace Crustum\BatchQueue\Model\Table;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Model\Entity\Batch;
 use Cake\I18n\DateTime;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Model\Entity\Batch;
 
 /**
  * Batches Model
  *
  * @property \Cake\ORM\Association\HasMany $BatchJobs
- * @method \BatchQueue\Model\Entity\Batch newEmptyEntity()
- * @method \BatchQueue\Model\Entity\Batch newEntity(array $data, array $options = [])
- * @method array<\BatchQueue\Model\Entity\Batch> newEntities(array $data, array $options = [])
- * @method \BatchQueue\Model\Entity\Batch get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \BatchQueue\Model\Entity\Batch findOrCreate($search, ?callable $callback = null, array $options = [])
- * @method \BatchQueue\Model\Entity\Batch patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method array<\BatchQueue\Model\Entity\Batch> patchEntities(iterable $entities, array $data, array $options = [])
- * @method \BatchQueue\Model\Entity\Batch|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method \BatchQueue\Model\Entity\Batch saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method iterable<\BatchQueue\Model\Entity\Batch> saveMany(iterable $entities, array $options = [])
- * @method iterable<\BatchQueue\Model\Entity\Batch> saveManyOrFail(iterable $entities, array $options = [])
- * @method iterable<\BatchQueue\Model\Entity\Batch> deleteMany(iterable $entities, array $options = [])
- * @method iterable<\BatchQueue\Model\Entity\Batch> deleteManyOrFail(iterable $entities, array $options = [])
+ * @method \Crustum\BatchQueue\Model\Entity\Batch newEmptyEntity()
+ * @method \Crustum\BatchQueue\Model\Entity\Batch newEntity(array $data, array $options = [])
+ * @method array<\Crustum\BatchQueue\Model\Entity\Batch> newEntities(array $data, array $options = [])
+ * @method \Crustum\BatchQueue\Model\Entity\Batch get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \Crustum\BatchQueue\Model\Entity\Batch findOrCreate($search, ?callable $callback = null, array $options = [])
+ * @method \Crustum\BatchQueue\Model\Entity\Batch patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method array<\Crustum\BatchQueue\Model\Entity\Batch> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Crustum\BatchQueue\Model\Entity\Batch|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \Crustum\BatchQueue\Model\Entity\Batch saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method iterable<\Crustum\BatchQueue\Model\Entity\Batch> saveMany(iterable $entities, array $options = [])
+ * @method iterable<\Crustum\BatchQueue\Model\Entity\Batch> saveManyOrFail(iterable $entities, array $options = [])
+ * @method iterable<\Crustum\BatchQueue\Model\Entity\Batch> deleteMany(iterable $entities, array $options = [])
+ * @method iterable<\Crustum\BatchQueue\Model\Entity\Batch> deleteManyOrFail(iterable $entities, array $options = [])
  */
 class BatchesTable extends Table
 {
@@ -52,7 +52,7 @@ class BatchesTable extends Table
 
         $this->hasMany('BatchJobs', [
             'foreignKey' => 'batch_id',
-            'className' => 'BatchQueue.BatchJobs',
+            'className' => 'Crustum/BatchQueue.BatchJobs',
             'dependent' => true,
             'cascadeCallbacks' => true,
         ]);
@@ -128,8 +128,8 @@ class BatchesTable extends Table
     /**
      * Create batch from BatchDefinition
      *
-     * @param \BatchQueue\Data\BatchDefinition $batchDefinition Batch definition
-     * @return \BatchQueue\Model\Entity\Batch
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batchDefinition Batch definition
+     * @return \Crustum\BatchQueue\Model\Entity\Batch
      */
     public function createFromDefinition(BatchDefinition $batchDefinition): Batch
     {
@@ -155,8 +155,8 @@ class BatchesTable extends Table
     /**
      * Convert entity to BatchDefinition
      *
-     * @param \BatchQueue\Model\Entity\Batch $batch Batch entity
-     * @return \BatchQueue\Data\BatchDefinition
+     * @param \Crustum\BatchQueue\Model\Entity\Batch $batch Batch entity
+     * @return \Crustum\BatchQueue\Data\BatchDefinition
      */
     public function toDefinition(Batch $batch): BatchDefinition
     {

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Job;
+namespace Crustum\BatchQueue\Job;
 
-use BatchQueue\Storage\SqlBatchStorage;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
 
 /**
  * Compensation Failed Callback Job

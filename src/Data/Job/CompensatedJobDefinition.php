@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Data\Job;
+namespace Crustum\BatchQueue\Data\Job;
 
-use BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Data\BatchDefinition;
 use InvalidArgumentException;
 
 /**

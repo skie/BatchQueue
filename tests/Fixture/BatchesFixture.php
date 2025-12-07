@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\Fixture;
+namespace Crustum\BatchQueue\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 

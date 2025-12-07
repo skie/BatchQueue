@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Data;
+namespace Crustum\BatchQueue\Data;
 
-use BatchQueue\Data\Job\JobDefinitionFactory;
-use BatchQueue\Model\Entity\BatchJob;
 use Cake\I18n\DateTime;
+use Crustum\BatchQueue\Data\Job\JobDefinitionFactory;
+use Crustum\BatchQueue\Model\Entity\BatchJob;
 use InvalidArgumentException;
 
 /**

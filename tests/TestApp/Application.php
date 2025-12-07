@@ -26,7 +26,7 @@ class Application extends BaseApplication
         if (class_exists('Cake\Queue\Plugin')) {
             $this->addPlugin(Plugin::class);
         }
-        $this->addPlugin('BatchQueue');
+        $this->addPlugin('Crustum/BatchQueue');
         $this->addPlugin(EnqueuePlugin::class, ['bootstrap' => true]);
 
         Resources::addConnection(CakeConnectionFactory::class, [

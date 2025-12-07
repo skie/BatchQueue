@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\Support;
+namespace Crustum\BatchQueue\Test\Support;
 
-use BatchQueue\Processor\BatchJobProcessor;
-use BatchQueue\Processor\ChainedJobProcessor;
-use BatchQueue\Storage\BatchStorageInterface;
-use BatchQueue\Storage\SqlBatchStorage;
 use Cake\Core\ContainerInterface;
+use Crustum\BatchQueue\Processor\BatchJobProcessor;
+use Crustum\BatchQueue\Processor\ChainedJobProcessor;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
 use Interop\Queue\Context;
 use Interop\Queue\Message;
 use Interop\Queue\Processor;

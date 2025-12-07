@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Storage;
+namespace Crustum\BatchQueue\Storage;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Data\BatchJobDefinition;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Data\BatchJobDefinition;
 use Throwable;
 
 /**
@@ -18,7 +18,7 @@ interface BatchStorageInterface
     /**
      * Create a new batch record
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition to store
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition to store
      * @return string
      * @throws \RuntimeException If batch creation fails
      */
@@ -38,7 +38,7 @@ interface BatchStorageInterface
      * Retrieve batch definition by ID
      *
      * @param string $batchId Batch identifier
-     * @return \BatchQueue\Data\BatchDefinition|null Batch definition or null if not found
+     * @return \Crustum\BatchQueue\Data\BatchDefinition|null Batch definition or null if not found
      */
     public function getBatch(string $batchId): ?BatchDefinition;
 
@@ -133,7 +133,7 @@ interface BatchStorageInterface
      * Get failed jobs for a batch
      *
      * @param string $batchId Batch identifier
-     * @return array<string, \BatchQueue\Data\BatchJobDefinition> Failed jobs keyed by job_id
+     * @return array<string, \Crustum\BatchQueue\Data\BatchJobDefinition> Failed jobs keyed by job_id
      */
     public function getFailedJobs(string $batchId): array;
 
@@ -151,7 +151,7 @@ interface BatchStorageInterface
      * @param string $status Batch status to filter by
      * @param int $limit Maximum number of batches to return
      * @param int $offset Offset for pagination
-     * @return array<\BatchQueue\Data\BatchDefinition> Array of batch definitions
+     * @return array<\Crustum\BatchQueue\Data\BatchDefinition> Array of batch definitions
      */
     public function getBatchesByStatus(string $status, int $limit = 100, int $offset = 0): array;
 
@@ -166,7 +166,7 @@ interface BatchStorageInterface
      *   - 'limit' => int|null Maximum number of jobs to return (null = all)
      *   - 'offset' => int Offset for pagination (default: 0)
      *   - 'order_by' => string Sort order ('position' (default) or 'created')
-     * @return array<int, \BatchQueue\Data\BatchJobDefinition> Jobs indexed by position
+     * @return array<int, \Crustum\BatchQueue\Data\BatchJobDefinition> Jobs indexed by position
      */
     public function getAllJobs(string $batchId, array $options = []): array;
 
@@ -181,7 +181,7 @@ interface BatchStorageInterface
      *   - 'created_before' => \DateTime|null
      * @param int $limit Maximum number of batches
      * @param int $offset Pagination offset
-     * @return array<\BatchQueue\Data\BatchDefinition>
+     * @return array<\Crustum\BatchQueue\Data\BatchDefinition>
      */
     public function getBatches(array $filters = [], int $limit = 100, int $offset = 0): array;
 
@@ -241,7 +241,7 @@ interface BatchStorageInterface
      *
      * @param string $batchId Batch ID
      * @param string $jobId Job ID
-     * @return \BatchQueue\Data\BatchJobDefinition|null Job definition or null if not found
+     * @return \Crustum\BatchQueue\Data\BatchJobDefinition|null Job definition or null if not found
      */
     public function getJobById(string $batchId, string $jobId): ?BatchJobDefinition;
 
@@ -263,7 +263,7 @@ interface BatchStorageInterface
      *
      * @param string $batchId Batch ID
      * @param int $position Job position in batch
-     * @return \BatchQueue\Data\BatchJobDefinition|null Job definition or null if not found
+     * @return \Crustum\BatchQueue\Data\BatchJobDefinition|null Job definition or null if not found
      */
     public function getJobByPosition(string $batchId, int $position): ?BatchJobDefinition;
 

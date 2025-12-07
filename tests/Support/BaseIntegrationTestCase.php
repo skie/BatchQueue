@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\Support;
+namespace Crustum\BatchQueue\Test\Support;
 
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
@@ -21,7 +21,7 @@ abstract class BaseIntegrationTestCase extends TestCase
 {
     use ConsoleIntegrationTestTrait;
 
-    protected array $fixtures = ['plugin.BatchQueue.Batches', 'plugin.BatchQueue.BatchJobs'];
+    protected array $fixtures = ['plugin.Crustum/BatchQueue.Batches', 'plugin.Crustum/BatchQueue.BatchJobs'];
 
     /**
      * Setup

@@ -38,9 +38,6 @@ define('CAKE', CORE_PATH . 'src' . DS);
 require ROOT . '/vendor/cakephp/cakephp/src/functions.php';
 require ROOT . '/vendor/autoload.php';
 
-use BatchQueue\BatchQueuePlugin;
-use BatchQueue\Processor\BatchJobProcessor;
-use BatchQueue\Processor\ChainedJobProcessor;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
@@ -52,6 +49,9 @@ use Cake\Error\ErrorTrap;
 use Cake\Queue\Plugin as QueuePlugin;
 use Cake\Queue\QueueManager;
 use Cake\TestSuite\Fixture\SchemaLoader;
+use Crustum\BatchQueue\BatchQueuePlugin;
+use Crustum\BatchQueue\Processor\BatchJobProcessor;
+use Crustum\BatchQueue\Processor\ChainedJobProcessor;
 use Enqueue\Client\Resources as ClientResources;
 use Enqueue\Resources;
 

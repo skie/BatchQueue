@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Storage;
+namespace Crustum\BatchQueue\Storage;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Data\BatchJobDefinition;
 use Cake\I18n\DateTime;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Data\BatchJobDefinition;
 use Redis;
 use RuntimeException;
 use Throwable;

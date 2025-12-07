@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Data;
+namespace Crustum\BatchQueue\Data;
 
 use Cake\I18n\DateTime;
 use InvalidArgumentException;

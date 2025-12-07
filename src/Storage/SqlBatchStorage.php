@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Storage;
+namespace Crustum\BatchQueue\Storage;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Data\BatchJobDefinition;
-use BatchQueue\Model\Table\BatchesTable;
-use BatchQueue\Model\Table\BatchJobsTable;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Data\BatchJobDefinition;
+use Crustum\BatchQueue\Model\Table\BatchesTable;
+use Crustum\BatchQueue\Model\Table\BatchJobsTable;
 use DateTime;
 use RuntimeException;
 use Throwable;
@@ -30,12 +30,12 @@ class SqlBatchStorage implements BatchStorageInterface
      */
     public function __construct()
     {
-        /** @var \BatchQueue\Model\Table\BatchesTable $batchesTable */
-        $batchesTable = $this->fetchTable('BatchQueue.Batches');
+        /** @var \Crustum\BatchQueue\Model\Table\BatchesTable $batchesTable */
+        $batchesTable = $this->fetchTable('Crustum/BatchQueue.Batches');
         $this->batchesTable = $batchesTable;
 
-        /** @var \BatchQueue\Model\Table\BatchJobsTable $batchJobsTable */
-        $batchJobsTable = $this->fetchTable('BatchQueue.BatchJobs');
+        /** @var \Crustum\BatchQueue\Model\Table\BatchJobsTable $batchJobsTable */
+        $batchJobsTable = $this->fetchTable('Crustum/BatchQueue.BatchJobs');
         $this->batchJobsTable = $batchJobsTable;
     }
 

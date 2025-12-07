@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Data\Job;
+namespace Crustum\BatchQueue\Data\Job;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Model\Entity\BatchJob;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Model\Entity\BatchJob;
 use InvalidArgumentException;
 
 /**
@@ -19,7 +19,7 @@ class JobDefinitionFactory
      *
      * @param mixed $input Job input (string, array, BatchJob entity)
      * @param string $batchType Batch type ('parallel' or 'sequential')
-     * @return \BatchQueue\Data\Job\JobDefinitionInterface Job definition DTO
+     * @return \Crustum\BatchQueue\Data\Job\JobDefinitionInterface Job definition DTO
      * @throws \InvalidArgumentException If input format is invalid
      */
     public static function create(mixed $input, string $batchType = BatchDefinition::TYPE_PARALLEL): JobDefinitionInterface

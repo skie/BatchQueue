@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Processor;
+namespace Crustum\BatchQueue\Processor;
 
-use BatchQueue\ResultAwareInterface;
-use BatchQueue\Service\QueueConfigService;
-use BatchQueue\Storage\BatchStorageInterface;
 use Cake\Core\ContainerInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
 use Cake\Queue\Queue\Processor;
 use Cake\Queue\QueueManager;
+use Crustum\BatchQueue\ResultAwareInterface;
+use Crustum\BatchQueue\Service\QueueConfigService;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use DateTime;
 use Enqueue\Consumption\Result;
 use Interop\Queue\Context;
@@ -37,7 +37,7 @@ class BatchJobProcessor extends Processor
     /**
      * Batch storage
      *
-     * @var \BatchQueue\Storage\BatchStorageInterface
+     * @var \Crustum\BatchQueue\Storage\BatchStorageInterface
      */
     private BatchStorageInterface $storage;
 

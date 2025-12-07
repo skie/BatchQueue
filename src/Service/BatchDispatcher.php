@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Service;
+namespace Crustum\BatchQueue\Service;
 
-use BatchQueue\Data\BatchDefinition;
-use BatchQueue\Storage\BatchStorageInterface;
 use Cake\Queue\QueueManager;
+use Crustum\BatchQueue\Data\BatchDefinition;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use RuntimeException;
 
 /**
@@ -20,7 +20,7 @@ final class BatchDispatcher
      * Dispatch batch by ID
      *
      * @param string $batchId Batch identifier
-     * @param \BatchQueue\Storage\BatchStorageInterface $storage Batch storage
+     * @param \Crustum\BatchQueue\Storage\BatchStorageInterface $storage Batch storage
      * @return void
      * @throws \RuntimeException If batch not found or dispatch fails
      */
@@ -38,7 +38,7 @@ final class BatchDispatcher
     /**
      * Dispatch batch from BatchDefinition
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition
      * @return void
      * @throws \RuntimeException If dispatch fails
      */
@@ -54,7 +54,7 @@ final class BatchDispatcher
     /**
      * Queue all jobs for parallel batch
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition
      * @return void
      */
     protected static function queueParallelJobs(BatchDefinition $batch): void
@@ -67,7 +67,7 @@ final class BatchDispatcher
     /**
      * Queue first job for sequential chain
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition
      * @return void
      */
     protected static function queueFirstChainJob(BatchDefinition $batch): void
@@ -88,7 +88,7 @@ final class BatchDispatcher
     /**
      * Queue individual chain job to ChainedJobProcessor
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition
      * @param array $job Job definition
      * @return void
      */
@@ -107,7 +107,7 @@ final class BatchDispatcher
     /**
      * Queue individual inner job to default queue
      *
-     * @param \BatchQueue\Data\BatchDefinition $batch Batch definition
+     * @param \Crustum\BatchQueue\Data\BatchDefinition $batch Batch definition
      * @param array $job Job definition
      * @param array|null $context Override context
      * @return void

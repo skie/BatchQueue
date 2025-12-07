@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\TestCase\Integration;
+namespace Crustum\BatchQueue\Test\TestCase\Integration;
 
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Storage\SqlBatchStorage;
-use BatchQueue\Test\Support\BaseIntegrationTestCase;
-use BatchQueue\Test\Support\TestJobs\SimpleTestJob;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
+use Crustum\BatchQueue\Test\Support\BaseIntegrationTestCase;
+use Crustum\BatchQueue\Test\Support\TestJobs\SimpleTestJob;
 use Exception;
 
 /**

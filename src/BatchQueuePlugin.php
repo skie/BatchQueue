@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue;
+namespace Crustum\BatchQueue;
 
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Storage\BatchStorageInterface;
-use BatchQueue\Storage\RedisBatchStorage;
-use BatchQueue\Storage\SqlBatchStorage;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
+use Crustum\BatchQueue\Storage\RedisBatchStorage;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
 
 /**
  * Plugin for BatchQueue

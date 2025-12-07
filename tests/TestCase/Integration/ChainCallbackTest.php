@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Test\TestCase\Integration;
+namespace Crustum\BatchQueue\Test\TestCase\Integration;
 
-use BatchQueue\Service\BatchManager;
-use BatchQueue\Storage\SqlBatchStorage;
-use BatchQueue\Test\Support\BaseIntegrationTestCase;
-use BatchQueue\Test\Support\TestJobs\AccumulateResultsCallbackJob;
-use BatchQueue\Test\Support\TestJobs\AccumulatorTestJob;
-use BatchQueue\Test\Support\TestJobs\FailingTestJob;
-use BatchQueue\Test\Support\TestJobs\FailureCallbackJob;
+use Crustum\BatchQueue\Service\BatchManager;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
+use Crustum\BatchQueue\Test\Support\BaseIntegrationTestCase;
+use Crustum\BatchQueue\Test\Support\TestJobs\AccumulateResultsCallbackJob;
+use Crustum\BatchQueue\Test\Support\TestJobs\AccumulatorTestJob;
+use Crustum\BatchQueue\Test\Support\TestJobs\FailingTestJob;
+use Crustum\BatchQueue\Test\Support\TestJobs\FailureCallbackJob;
 
 /**
  * Test chain (sequential) execution with callbacks

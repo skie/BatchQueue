@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace BatchQueue\Job;
+namespace Crustum\BatchQueue\Job;
 
-use BatchQueue\ResultAwareInterface;
-use BatchQueue\Storage\SqlBatchStorage;
 use Cake\Log\Log;
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
 use Cake\Queue\Queue\Processor;
+use Crustum\BatchQueue\ResultAwareInterface;
+use Crustum\BatchQueue\Storage\SqlBatchStorage;
 
 /**
  * Compensation Complete Callback Job
