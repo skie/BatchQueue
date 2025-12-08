@@ -5,7 +5,7 @@ namespace Crustum\BatchQueue\Job;
 
 use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
-use Crustum\BatchQueue\Storage\SqlBatchStorage;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
 
 /**
  * Compensation Failed Callback Job
@@ -15,6 +15,23 @@ use Crustum\BatchQueue\Storage\SqlBatchStorage;
  */
 class CompensationFailedCallbackJob implements JobInterface
 {
+    /**
+     * Batch storage
+     *
+     * @var \Crustum\BatchQueue\Storage\BatchStorageInterface
+     */
+    private BatchStorageInterface $storage;
+
+    /**
+     * Constructor
+     *
+     * @param \Crustum\BatchQueue\Storage\BatchStorageInterface $storage Batch storage
+     */
+    public function __construct(BatchStorageInterface $storage)
+    {
+        $this->storage = $storage;
+    }
+
     /**
      * Execute compensation failure callback
      *
@@ -31,8 +48,7 @@ class CompensationFailedCallbackJob implements JobInterface
             return null;
         }
 
-        $storage = new SqlBatchStorage();
-        $batch = $storage->getBatch($originalBatchId);
+        $batch = $this->storage->getBatch($originalBatchId);
 
         if ($batch) {
             $context = $batch->context ?? [];
@@ -40,7 +56,7 @@ class CompensationFailedCallbackJob implements JobInterface
             $context['compensation_failed_at'] = date('Y-m-d H:i:s');
             $context['compensation_error'] = $error;
 
-            $storage->updateBatch($originalBatchId, ['context' => $context]);
+            $this->storage->updateBatch($originalBatchId, ['context' => $context]);
         }
 
         return json_encode(['compensation_failed' => true, 'error' => $error]);

@@ -6,6 +6,8 @@ namespace Crustum\BatchQueue;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
+use Crustum\BatchQueue\Job\CompensationCompleteCallbackJob;
+use Crustum\BatchQueue\Job\CompensationFailedCallbackJob;
 use Crustum\BatchQueue\Service\BatchManager;
 use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use Crustum\BatchQueue\Storage\RedisBatchStorage;
@@ -40,6 +42,12 @@ class BatchQueuePlugin extends BasePlugin
         });
 
         $container->add(BatchManager::class)
+            ->addArgument(BatchStorageInterface::class);
+
+        $container->add(CompensationCompleteCallbackJob::class)
+            ->addArgument(BatchStorageInterface::class);
+
+        $container->add(CompensationFailedCallbackJob::class)
             ->addArgument(BatchStorageInterface::class);
     }
 }

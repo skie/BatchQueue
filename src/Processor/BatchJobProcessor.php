@@ -3,22 +3,14 @@ declare(strict_types=1);
 
 namespace Crustum\BatchQueue\Processor;
 
-use Cake\Core\ContainerInterface;
-use Cake\Event\EventDispatcherTrait;
-use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
-use Cake\Queue\Queue\Processor;
 use Cake\Queue\QueueManager;
-use Crustum\BatchQueue\ResultAwareInterface;
 use Crustum\BatchQueue\Service\QueueConfigService;
-use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use DateTime;
 use Enqueue\Consumption\Result;
 use Interop\Queue\Context;
 use Interop\Queue\Message as QueueMessage;
 use Interop\Queue\Processor as InteropProcessor;
-use InvalidArgumentException;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Throwable;
 
@@ -30,32 +22,8 @@ use Throwable;
  * 2. Executes individual jobs within parallel batches
  * 3. Tracks batch progress and handles completion
  */
-class BatchJobProcessor extends Processor
+class BatchJobProcessor extends BaseBatchProcessor
 {
-    use EventDispatcherTrait;
-
-    /**
-     * Batch storage
-     *
-     * @var \Crustum\BatchQueue\Storage\BatchStorageInterface
-     */
-    private BatchStorageInterface $storage;
-
-    /**
-     * Constructor
-     *
-     * @param \Psr\Log\LoggerInterface $logger Logger.
-     * @param \Cake\Core\ContainerInterface $container Container.
-     * @return void
-     */
-    public function __construct(
-        LoggerInterface $logger,
-        ContainerInterface $container,
-    ) {
-        parent::__construct($logger, $container);
-        $this->storage = $container->get(BatchStorageInterface::class);
-    }
-
     /**
      * The method processes messages
      *
@@ -81,24 +49,11 @@ class BatchJobProcessor extends Processor
 
             if (isset($body['args'][0]['is_callback']) && $body['args'][0]['is_callback']) {
                 $this->logger->debug(__('Executing batch callback job'));
-                $jobClass = $body['class'][0] ?? null;
-                if (!$jobClass || !class_exists($jobClass)) {
-                    throw new InvalidArgumentException("Invalid job class: {$jobClass}");
-                }
-                $jobInstance = new $jobClass();
-                if (!$jobInstance instanceof JobInterface) {
-                    throw new InvalidArgumentException("Class {$jobClass} must implement JobInterface");
-                }
-
                 $this->dispatchEvent('Processor.message.seen', ['queueMessage' => $message]);
                 $this->dispatchEvent('Processor.message.start', ['message' => $jobMessage]);
 
-                $jobInstance->execute($jobMessage);
-
-                $jobResult = null;
-                if ($jobInstance instanceof ResultAwareInterface) {
-                    $jobResult = $jobInstance->getResult();
-                }
+                $executionResult = $this->processMessageWithResult($jobMessage);
+                $jobResult = $executionResult['result'];
 
                 $duration = (int)((microtime(true) * 1000) - $startTime);
                 $this->dispatchEvent('Processor.message.success', [
@@ -134,24 +89,9 @@ class BatchJobProcessor extends Processor
 
             $this->dispatchEvent('Processor.message.start', ['message' => $jobMessage]);
 
-            $jobClass = $body['class'][0] ?? null;
-
-            if (!$jobClass || !class_exists($jobClass)) {
-                throw new InvalidArgumentException("Invalid job class: {$jobClass}");
-            }
-
-            $jobInstance = new $jobClass();
-
-            if (!$jobInstance instanceof JobInterface) {
-                throw new InvalidArgumentException("Class {$jobClass} must implement JobInterface");
-            }
-
-            $result = $jobInstance->execute($jobMessage);
-
-            $jobResult = null;
-            if ($jobInstance instanceof ResultAwareInterface) {
-                $jobResult = $jobInstance->getResult();
-            }
+            $executionResult = $this->processMessageWithResult($jobMessage);
+            $result = $executionResult['response'];
+            $jobResult = $executionResult['result'];
             if ($result === null || $result === InteropProcessor::ACK) {
                 $this->handleJobSuccess($batchId, $jobId, $jobPosition, $jobResult, $jobContext);
                 $result = InteropProcessor::ACK;

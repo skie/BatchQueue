@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace Crustum\BatchQueue\Processor;
 
-use Cake\Core\ContainerInterface;
-use Cake\Event\EventDispatcherTrait;
-use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
-use Cake\Queue\Queue\Processor;
 use Cake\Queue\QueueManager;
+use Closure;
 use Crustum\BatchQueue\ContextAwareInterface;
 use Crustum\BatchQueue\Data\BatchDefinition;
 use Crustum\BatchQueue\Data\BatchJobDefinition;
@@ -17,13 +14,10 @@ use Crustum\BatchQueue\Job\CompensationFailedCallbackJob;
 use Crustum\BatchQueue\ResultAwareInterface;
 use Crustum\BatchQueue\Service\BatchManager;
 use Crustum\BatchQueue\Service\QueueConfigService;
-use Crustum\BatchQueue\Storage\BatchStorageInterface;
 use DateTime;
 use Interop\Queue\Context;
 use Interop\Queue\Message as QueueMessage;
 use Interop\Queue\Processor as InteropProcessor;
-use InvalidArgumentException;
-use Psr\Log\LoggerInterface;
 use Throwable;
 
 /**
@@ -36,32 +30,8 @@ use Throwable;
  * 4. Handles context passing to inner jobs
  * 5. Handles batch completion and failure
  */
-class ChainedJobProcessor extends Processor
+class ChainedJobProcessor extends BaseBatchProcessor
 {
-    use EventDispatcherTrait;
-
-    /**
-     * Batch storage
-     *
-     * @var \Crustum\BatchQueue\Storage\BatchStorageInterface
-     */
-    private BatchStorageInterface $storage;
-
-    /**
-     * Constructor
-     *
-     * @param \Psr\Log\LoggerInterface $logger Logger.
-     * @param \Cake\Core\ContainerInterface $container Container.
-     * @return void
-     */
-    public function __construct(
-        LoggerInterface $logger,
-        ContainerInterface $container,
-    ) {
-        parent::__construct($logger, $container);
-        $this->storage = $container->get(BatchStorageInterface::class);
-    }
-
     /**
      * The method processes messages
      *
@@ -89,24 +59,12 @@ class ChainedJobProcessor extends Processor
 
             if (isset($body['args'][0]['is_callback']) && $body['args'][0]['is_callback']) {
                 $this->logger->debug(__('Executing batch callback job'));
-                $jobClass = $body['class'][0] ?? null;
-                if (!$jobClass || !class_exists($jobClass)) {
-                    throw new InvalidArgumentException("Invalid job class: {$jobClass}");
-                }
-                $jobInstance = new $jobClass();
-                if (!$jobInstance instanceof JobInterface) {
-                    throw new InvalidArgumentException("Class {$jobClass} must implement JobInterface");
-                }
 
                 $this->dispatchEvent('Processor.message.seen', ['queueMessage' => $message]);
                 $this->dispatchEvent('Processor.message.start', ['message' => $jobMessage]);
 
-                $jobInstance->execute($jobMessage);
-
-                $jobResult = null;
-                if ($jobInstance instanceof ResultAwareInterface) {
-                    $jobResult = $jobInstance->getResult();
-                }
+                $executionResult = $this->processMessageWithResult($jobMessage);
+                $jobResult = $executionResult['result'];
 
                 $duration = (int)((microtime(true) * 1000) - $startTime);
                 $this->dispatchEvent('Processor.message.success', [
@@ -119,24 +77,12 @@ class ChainedJobProcessor extends Processor
 
             if (isset($body['args'][0]['is_compensation']) && $body['args'][0]['is_compensation']) {
                 $this->logger->debug(__('Executing compensation job'));
-                $jobClass = $body['class'][0] ?? null;
-                if (!$jobClass || !class_exists($jobClass)) {
-                    throw new InvalidArgumentException("Invalid job class: {$jobClass}");
-                }
-                $jobInstance = new $jobClass();
-                if (!$jobInstance instanceof JobInterface) {
-                    throw new InvalidArgumentException("Class {$jobClass} must implement JobInterface");
-                }
 
                 $this->dispatchEvent('Processor.message.seen', ['queueMessage' => $message]);
                 $this->dispatchEvent('Processor.message.start', ['message' => $jobMessage]);
 
-                $jobInstance->execute($jobMessage);
-
-                $jobResult = null;
-                if ($jobInstance instanceof ResultAwareInterface) {
-                    $jobResult = $jobInstance->getResult();
-                }
+                $executionResult = $this->processMessageWithResult($jobMessage);
+                $jobResult = $executionResult['result'];
 
                 $duration = (int)((microtime(true) * 1000) - $startTime);
                 $this->dispatchEvent('Processor.message.success', [
@@ -180,14 +126,13 @@ class ChainedJobProcessor extends Processor
 
             $this->dispatchEvent('Processor.message.start', ['message' => $jobMessage]);
 
-            if (!$innerJobClass || !class_exists($innerJobClass)) {
-                throw new InvalidArgumentException("Invalid job class: {$innerJobClass}");
-            }
+            $target = $jobMessage->getTarget();
+            $innerJobClass = $target[0];
 
-            $innerJob = new $innerJobClass();
-
-            if (!$innerJob instanceof JobInterface) {
-                throw new InvalidArgumentException("Class {$innerJobClass} must implement JobInterface");
+            if ($this->container && $this->container->has($innerJobClass)) {
+                $innerJob = $this->container->get($innerJobClass);
+            } else {
+                $innerJob = new $innerJobClass();
             }
 
             if ($innerJob instanceof ContextAwareInterface) {
@@ -195,8 +140,8 @@ class ChainedJobProcessor extends Processor
             }
 
             $innerMessage = new Message($message, $context, $this->container);
-
-            $innerJob->execute($innerMessage);
+            $callable = Closure::fromCallable([$innerJob, $target[1]]);
+            $callable($innerMessage);
 
             $jobResult = null;
             if ($innerJob instanceof ResultAwareInterface) {
@@ -371,7 +316,6 @@ class ChainedJobProcessor extends Processor
         if (!$batch) {
             return;
         }
-        $this->logger->info('**ChainedJobProcessor** handleBatchCompletion: batchId=' . $batchId);
 
         $this->storage->updateBatch($batchId, [
             'status' => 'completed',

@@ -404,6 +404,48 @@ class SqlBatchStorage implements BatchStorageInterface
     /**
      * @inheritDoc
      */
+    public function countBatches(array $filters = []): int
+    {
+        $query = $this->batchesTable->find();
+
+        if (isset($filters['status']) && is_string($filters['status'])) {
+            $query->where(['status' => $filters['status']]);
+        }
+
+        if (isset($filters['type']) && is_string($filters['type'])) {
+            $query->where(['type' => $filters['type']]);
+        }
+
+        if (isset($filters['created_after']) && $filters['created_after'] instanceof DateTime) {
+            $query->where(['created >=' => $filters['created_after']]);
+        }
+
+        if (isset($filters['created_before']) && $filters['created_before'] instanceof DateTime) {
+            $query->where(['created <=' => $filters['created_before']]);
+        }
+
+        if (isset($filters['has_compensation']) && $filters['has_compensation'] === true) {
+            $subquery = $this->batchJobsTable->find()
+                ->select(['batch_id'])
+                ->where(function ($exp) {
+                    return $exp->or([
+                        $exp->like('payload', '%"compensation":%'),
+                        $exp->like('payload', '%\'compensation\':%'),
+                    ]);
+                })
+                ->groupBy(['batch_id']);
+
+            $query->where(function ($exp) use ($subquery) {
+                return $exp->in($this->batchesTable->getAlias() . '.id', $subquery);
+            });
+        }
+
+        return $query->count();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function cleanupOldBatches(int $olderThanDays = 7): int
     {
         return $this->batchesTable->cleanupOld($olderThanDays);

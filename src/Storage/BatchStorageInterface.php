@@ -186,6 +186,19 @@ interface BatchStorageInterface
     public function getBatches(array $filters = [], int $limit = 100, int $offset = 0): array;
 
     /**
+     * Count batches matching filter criteria
+     *
+     * @param array<string, mixed> $filters Filter criteria (same as getBatches):
+     *   - 'status' => string|null
+     *   - 'type' => 'parallel'|'sequential'|null
+     *   - 'has_compensation' => bool|null
+     *   - 'created_after' => \DateTime|null
+     *   - 'created_before' => \DateTime|null
+     * @return int Number of batches matching filters
+     */
+    public function countBatches(array $filters = []): int;
+
+    /**
      * Cleanup old completed/failed batches
      *
      * @param int $olderThanDays Remove batches older than this many days

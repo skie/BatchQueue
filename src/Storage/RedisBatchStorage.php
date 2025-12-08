@@ -664,6 +664,65 @@ LUA;
     /**
      * @inheritDoc
      */
+    public function countBatches(array $filters = []): int
+    {
+        $pattern = $this->prefix . '*';
+        $count = 0;
+        $iterator = null;
+
+        while (($keys = $this->redis->scan($iterator, $pattern, 100)) !== false) {
+            foreach ($keys as $key) {
+                if (strpos($key, ':jobs:') !== false || strpos($key, ':results:') !== false || strpos($key, ':failed:') !== false) {
+                    continue;
+                }
+
+                $batchId = str_replace($this->prefix, '', $key);
+                $batchData = $this->redis->hMGet($key, ['status', 'type', 'context', 'created']);
+
+                if (empty($batchData['status'])) {
+                    continue;
+                }
+
+                $batchStatus = $batchData['status'] ?? '';
+                if (isset($filters['status']) && is_string($filters['status']) && $batchStatus !== $filters['status']) {
+                    continue;
+                }
+
+                if (isset($filters['type']) && is_string($filters['type']) && ($batchData['type'] ?? '') !== $filters['type']) {
+                    continue;
+                }
+
+                if (isset($filters['created_after']) && $filters['created_after'] instanceof DateTime) {
+                    $createdAt = isset($batchData['created']) ? (int)$batchData['created'] : 0;
+                    if ($createdAt < $filters['created_after']->getTimestamp()) {
+                        continue;
+                    }
+                }
+
+                if (isset($filters['created_before']) && $filters['created_before'] instanceof DateTime) {
+                    $createdAt = isset($batchData['created']) ? (int)$batchData['created'] : 0;
+                    if ($createdAt > $filters['created_before']->getTimestamp()) {
+                        continue;
+                    }
+                }
+
+                if (isset($filters['has_compensation']) && $filters['has_compensation'] === true) {
+                    $batch = $this->getBatch($batchId);
+                    if (!$batch || !$batch->hasCompensation()) {
+                        continue;
+                    }
+                }
+
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function cleanupOldBatches(int $olderThanDays = 7): int
     {
         $cutoffTimestamp = (new DateTime())->modify("-{$olderThanDays} days")->getTimestamp();

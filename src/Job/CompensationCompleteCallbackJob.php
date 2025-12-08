@@ -8,7 +8,7 @@ use Cake\Queue\Job\JobInterface;
 use Cake\Queue\Job\Message;
 use Cake\Queue\Queue\Processor;
 use Crustum\BatchQueue\ResultAwareInterface;
-use Crustum\BatchQueue\Storage\SqlBatchStorage;
+use Crustum\BatchQueue\Storage\BatchStorageInterface;
 
 /**
  * Compensation Complete Callback Job
@@ -19,11 +19,28 @@ use Crustum\BatchQueue\Storage\SqlBatchStorage;
 class CompensationCompleteCallbackJob implements JobInterface, ResultAwareInterface
 {
     /**
+     * Batch storage
+     *
+     * @var \Crustum\BatchQueue\Storage\BatchStorageInterface
+     */
+    private BatchStorageInterface $storage;
+
+    /**
      * The result of the job execution
      *
      * @var mixed
      */
     private mixed $result = null;
+
+    /**
+     * Constructor
+     *
+     * @param \Crustum\BatchQueue\Storage\BatchStorageInterface $storage Batch storage
+     */
+    public function __construct(BatchStorageInterface $storage)
+    {
+        $this->storage = $storage;
+    }
 
     /**
      * Execute compensation completion callback
@@ -42,15 +59,14 @@ class CompensationCompleteCallbackJob implements JobInterface, ResultAwareInterf
             return null;
         }
 
-        $storage = new SqlBatchStorage();
-        $batch = $storage->getBatch($originalBatchId);
+        $batch = $this->storage->getBatch($originalBatchId);
 
         if ($batch) {
             $context = $batch->context ?? [];
             $context['compensation_status'] = 'completed';
             $context['compensation_completed_at'] = date('Y-m-d H:i:s');
 
-            $storage->updateBatch($originalBatchId, ['context' => $context]);
+            $this->storage->updateBatch($originalBatchId, ['context' => $context]);
         }
         Log::info('**CompensationCompleteCallbackJob** execute: originalBatchId=' . $originalBatchId . ' batch=' . json_encode($batch));
 
